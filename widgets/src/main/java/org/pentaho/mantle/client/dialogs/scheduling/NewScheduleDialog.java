@@ -19,6 +19,7 @@ package org.pentaho.mantle.client.dialogs.scheduling;
 
 import java.util.Date;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.pentaho.gwt.widgets.client.dialogs.IDialogCallback;
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
@@ -26,6 +27,7 @@ import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.gwt.widgets.client.formatter.JSDateTextFormatter;
 import org.pentaho.gwt.widgets.client.panel.HorizontalFlexPanel;
 import org.pentaho.gwt.widgets.client.panel.VerticalFlexPanel;
+import org.pentaho.gwt.widgets.client.utils.ImageUtil;
 import org.pentaho.gwt.widgets.client.utils.NameUtils;
 import org.pentaho.gwt.widgets.client.utils.string.StringUtils;
 import org.pentaho.gwt.widgets.client.wizards.AbstractWizardDialog.ScheduleDialogType;
@@ -71,8 +73,6 @@ public class NewScheduleDialog extends PromptDialogBox {
 
   private ScheduleRecurrenceDialog recurrenceDialog = null;
 
-  private TextBox scheduleOwnerTextBox = new TextBox();
-  private Label scheduleOwnerErrorLabel = new Label();
   private TextBox scheduleNameTextBox = new TextBox();
   private static TextBox scheduleLocationTextBox = new TextBox();
   private CheckBox appendTimeChk = new CheckBox();
@@ -80,6 +80,10 @@ public class NewScheduleDialog extends PromptDialogBox {
   private CaptionPanel previewCaptionPanel;
   private Label scheduleNamePreviewLabel;
   private CheckBox overrideExistingChk = new CheckBox();
+
+  private final TextBox scheduleOwnerTextBox = new TextBox();
+  private final Button changeOwnerButton = new Button( Messages.getString( "change" ) );
+  private final HorizontalPanel scheduleOwnerError = new HorizontalFlexPanel();
   private static HandlerRegistration changeHandlerReg = null;
   private static HandlerRegistration keyHandlerReg = null;
 
@@ -223,8 +227,7 @@ public class NewScheduleDialog extends PromptDialogBox {
         selectFolder.center();
       }
     } );
-    browseButton.setStyleName( "pentaho-button" );
-    browseButton.getElement().setId( "schedule-dialog-select-button" );
+    browseButton.setStyleName( "pentaho-button schedule-dialog-button" );
 
     ChangeHandler ch = new ChangeHandler() {
       public void onChange( ChangeEvent event ) {
@@ -304,76 +307,114 @@ public class NewScheduleDialog extends PromptDialogBox {
     VerticalPanel panel = new VerticalFlexPanel();
 
     Label label = new Label( Messages.getString( "owner" ) );
-    label.addStyleName( "schedule-owner" );
-    label.setStyleName( ScheduleEditor.SCHEDULE_LABEL );
+    label.addStyleName( ScheduleEditor.SCHEDULE_LABEL );
     panel.add( label );
 
-    scheduleOwnerTextBox.getElement().setId( "schedule-owner-input" );
+    HorizontalPanel ownerPanel = new HorizontalFlexPanel();
+    panel.add( ownerPanel );
 
-    final JavaScriptObject ownerCallback = ScheduleHelper.debounce( this::validateScheduleOwner, 300 );
-    scheduleOwnerTextBox.addKeyUpHandler( event -> ScheduleHelper.callDebounce( ownerCallback ) );
 
-    if ( jsJob == null ) {
-      scheduleOwnerTextBox.setEnabled( false );
+    VerticalPanel inputPanel = new VerticalFlexPanel();
+    inputPanel.addStyleName( "with-layout-gap-none" );
+    ownerPanel.add( inputPanel );
 
-      final String currentUserUrl = EnvironmentHelper.getFullyQualifiedURL() + "api/session/userName";
-      final RequestBuilder builder = new RequestBuilder( RequestBuilder.GET, currentUserUrl );
+    scheduleOwnerTextBox.addStyleName( "schedule-dialog-input" );
+    scheduleOwnerTextBox.setEnabled( false );
+    updateScheduleOwnerTextBox();
+    inputPanel.add( scheduleOwnerTextBox );
 
-      try {
-        RequestCallback rc = new RequestCallback() {
-          @Override
-          public void onResponseReceived( final Request request, final Response response ) {
-            if ( response.getStatusCode() == 200 ) {
-              scheduleOwnerTextBox.setText( response.getText() );
-              updateButtonState();
-            }
-          }
+    scheduleOwnerError.setVisible( false );
+    inputPanel.add( scheduleOwnerError );
 
-          @Override
-          public void onError( Request request, Throwable exception ) {
-            // noop
-          }
-        };
-        builder.sendRequest( "", rc );
+    scheduleOwnerError.add( ImageUtil.getThemeableImage( "pentaho-error-button", "icon-zoomable" ) );
 
-      } catch ( RequestException e ) {
-        // noop
-      }
-    } else {
-      scheduleOwnerTextBox.setText( jsJob.getUserName() );
+    Label errorLabel = new Label( Messages.getString( "schedule.invalidOwner" ) );
+    errorLabel.addStyleName( "schedule-owner-error" );
+    scheduleOwnerError.add( errorLabel );
 
-      final String isAdminUserUrl = EnvironmentHelper.getFullyQualifiedURL() + "api/mantle/isAdministrator";
-      final RequestBuilder builder = new RequestBuilder( RequestBuilder.GET, isAdminUserUrl );
-
-      try {
-        RequestCallback rc = new RequestCallback() {
-          @Override
-          public void onResponseReceived( final Request request, final Response response ) {
-            if ( response.getStatusCode() == 200 ) {
-              boolean isAdmin = Boolean.parseBoolean( response.getText() );
-              scheduleOwnerTextBox.setEnabled( isAdmin );
-            }
-          }
-
-          @Override
-          public void onError( Request request, Throwable exception ) {
-            scheduleOwnerTextBox.setEnabled( false );
-          }
-        };
-        builder.sendRequest( "", rc );
-
-      } catch ( RequestException e ) {
-        scheduleOwnerTextBox.setEnabled( false );
-      }
-    }
-
-    scheduleOwnerErrorLabel.addStyleName( "schedule-owner-error" );
-    scheduleOwnerErrorLabel.setVisible( false );
-
-    panel.add( scheduleOwnerTextBox );
-    panel.add( scheduleOwnerErrorLabel );
+    changeOwnerButton.setStyleName( "pentaho-button schedule-dialog-button" );
+    changeOwnerButton.addClickHandler( event -> showChangeOwnerDialog() );
+    updateChangeOwnerButton();
+    ownerPanel.add( changeOwnerButton );
 
     return panel;
+  }
+
+  private void updateScheduleOwnerTextBox() {
+    if ( jsJob != null ) {
+      scheduleOwnerTextBox.setText( jsJob.getUserName() );
+      validateScheduleOwner();
+      return;
+    }
+
+    final String currentUserUrl = EnvironmentHelper.getFullyQualifiedURL() + "api/session/userName";
+    final RequestBuilder builder = new RequestBuilder( RequestBuilder.GET, currentUserUrl );
+
+    try {
+      RequestCallback rc = new RequestCallback() {
+        @Override
+        public void onResponseReceived( final Request request, final Response response ) {
+          if ( response.getStatusCode() == 200 ) {
+            scheduleOwnerError.setVisible( false );
+            scheduleOwnerTextBox.setText( response.getText() );
+            updateButtonState();
+          }
+        }
+
+        @Override
+        public void onError( Request request, Throwable exception ) { /* noop */ }
+      };
+      builder.sendRequest( "", rc );
+
+    } catch ( RequestException e ) {
+      // noop
+    }
+  }
+
+  private void updateChangeOwnerButton() {
+    if ( jsJob == null ) {
+      changeOwnerButton.setEnabled( false );
+      return;
+    }
+
+    final String isAdminUserUrl = EnvironmentHelper.getFullyQualifiedURL() + "api/mantle/isAdministrator";
+    final RequestBuilder builder = new RequestBuilder( RequestBuilder.GET, isAdminUserUrl );
+
+    try {
+      RequestCallback rc = new RequestCallback() {
+        @Override
+        public void onResponseReceived( final Request request, final Response response ) {
+          if ( response.getStatusCode() == 200 ) {
+            boolean isAdmin = Boolean.parseBoolean(response.getText());
+            changeOwnerButton.setEnabled( isAdmin );
+          }
+        }
+
+        @Override
+        public void onError( Request request, Throwable exception ) { /* noop */ }
+      };
+      builder.sendRequest( "", rc );
+
+    } catch ( RequestException e ) {
+      // noop
+    }
+  }
+
+  private void showChangeOwnerDialog() {
+    final ChangeScheduleOwnerDialog dialog = new ChangeScheduleOwnerDialog();
+    dialog.setOwner( scheduleOwnerTextBox.getText() );
+
+    dialog.setCallback( new IDialogCallback() {
+      public void okPressed() {
+        scheduleOwnerTextBox.setText( dialog.getOwner() );
+        scheduleOwnerError.setVisible( false );
+
+        updateButtonState();
+      }
+
+      public void cancelPressed() { /* noop */ }
+    } );
+    dialog.center();
   }
 
   protected void onOk() {
@@ -526,7 +567,7 @@ public class NewScheduleDialog extends PromptDialogBox {
     boolean hasLocation = !StringUtils.isEmpty( scheduleLocationTextBox.getText() );
     boolean hasName = !StringUtils.isEmpty( scheduleNameTextBox.getText() );
     boolean hasOwner = !StringUtils.isEmpty( scheduleOwnerTextBox.getText() );
-    boolean hasOwnerError = scheduleOwnerErrorLabel.isVisible();
+    boolean hasOwnerError = scheduleOwnerError.isVisible();
 
     okButton.setEnabled( hasLocation && hasName && hasOwner && !hasOwnerError );
   }
@@ -567,11 +608,6 @@ public class NewScheduleDialog extends PromptDialogBox {
 
   private void validateScheduleOwner() {
     String owner = scheduleOwnerTextBox.getText();
-    if (StringUtils.isEmpty( owner ) ) {
-      scheduleOwnerErrorLabel.setVisible( false );
-      updateButtonState();
-      return;
-    }
 
     String currentUserUrl = EnvironmentHelper.getFullyQualifiedURL() + "api/userrolelist/getRolesForUser?user=" + owner;
     RequestBuilder builder = new RequestBuilder( RequestBuilder.GET, currentUserUrl );
@@ -580,30 +616,24 @@ public class NewScheduleDialog extends PromptDialogBox {
       RequestCallback requestCallback = new RequestCallback() {
         @Override
         public void onResponseReceived( final Request request, final Response response ) {
+          boolean showError = false;
           if ( response.getStatusCode() == 200 ) {
             // all users have at least one role (Authenticated or Anonymous),
             // so if no roles are returned, the user doesn't exist.
-            boolean userExists = StringUtils.countMatches( response.getText(), "<role>" ) > 0;
-            if ( !userExists ) {
-              scheduleOwnerErrorLabel.setText( Messages.getString( "schedule.invalidOwner" ) );
-            }
-
-            scheduleOwnerErrorLabel.setVisible( !userExists );
-            updateButtonState();
+            showError = StringUtils.countMatches( response.getText(), "<role>" ) == 0;
           }
+
+          scheduleOwnerError.setVisible( showError );
+          updateButtonState();
         }
 
         @Override
-        public void onError( Request request, Throwable exception ) {
-          scheduleOwnerErrorLabel.setVisible( true );
-          updateButtonState();
-        }
+        public void onError( Request request, Throwable exception ) { /* noop */ }
       };
       builder.sendRequest( "", requestCallback );
 
     } catch ( RequestException e ) {
-      scheduleOwnerErrorLabel.setVisible( true );
-      updateButtonState();
+      // noop
     }
   }
 
