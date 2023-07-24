@@ -154,6 +154,7 @@ public class NewScheduleDialog extends PromptDialogBox {
     scheduleNameLabelPanel.add( scheduleNameInfoLabel );
 
     String defaultName = filePath.substring( filePath.lastIndexOf( "/" ) + 1, filePath.lastIndexOf( "." ) );
+    scheduleNameTextBox.addStyleName( "schedule-dialog-input" );
     scheduleNameTextBox.getElement().setId( "schedule-name-input" );
     scheduleNameTextBox.setText( defaultName );
 
@@ -252,6 +253,7 @@ public class NewScheduleDialog extends PromptDialogBox {
     changeHandlerReg = scheduleLocationTextBox.addChangeHandler( ch );
     scheduleNameTextBox.addChangeHandler( ch );
 
+    scheduleLocationTextBox.addStyleName( "schedule-dialog-input" );
     scheduleLocationTextBox.getElement().setId( "generated-content-location" );
     HorizontalFlexPanel locationPanel = new HorizontalFlexPanel();
     scheduleLocationTextBox.setEnabled( false );
@@ -312,7 +314,6 @@ public class NewScheduleDialog extends PromptDialogBox {
 
     HorizontalPanel ownerPanel = new HorizontalFlexPanel();
     panel.add( ownerPanel );
-
 
     VerticalPanel inputPanel = new VerticalFlexPanel();
     inputPanel.addStyleName( "with-layout-gap-none" );

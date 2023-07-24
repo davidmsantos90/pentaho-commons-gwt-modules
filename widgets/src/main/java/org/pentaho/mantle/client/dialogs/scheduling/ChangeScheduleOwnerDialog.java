@@ -17,6 +17,7 @@
 
 package org.pentaho.mantle.client.dialogs.scheduling;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -82,6 +83,7 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
     ownerLabel.addStyleName( ScheduleEditor.SCHEDULE_LABEL );
     currentOwnerPanel.add( ownerLabel );
 
+    ownerInput.addStyleName( "schedule-dialog-input" );
     ownerInput.setEnabled( false );
     currentOwnerPanel.add( ownerInput );
 
@@ -92,6 +94,7 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
     newOwnerLabel.addStyleName( ScheduleEditor.SCHEDULE_LABEL );
     newOwnerPanel.add( newOwnerLabel );
 
+    newOwnerList.addStyleName( "schedule-dialog-custom-list" );
     newOwnerList.setMaxDropVisible( 5 );
     newOwnerList.setDefaultSelectionEnabled( false );
     newOwnerList.setSelectedItemPlaceholder( Messages.getString( "schedule.selectUsername" ) );
@@ -100,6 +103,11 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
     newOwnerPanel.add( newOwnerList );
 
     setContent( content );
+    content.getElement().getStyle().clearHeight();
+    content.getParent().setHeight( "100%" );
+    content.getElement().getParentElement().getStyle().setVerticalAlign( Style.VerticalAlign.TOP );
+
+    setSize( "650px", "450px" );
     addStyleName( "change-schedule-owner-dialog" );
   }
 

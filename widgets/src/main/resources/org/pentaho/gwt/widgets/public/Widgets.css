@@ -2,6 +2,68 @@
 Please, please comment all entries so that it is clear
 which java class/code the style is associated with */
 
+:root {
+  --element-width: auto;
+  --focus-ring-padding: 0;
+
+  --typ-body-font-size-px: 14;
+  --typ-body-font-size: calc(1px * var(--typ-body-font-size-px));
+
+  /* Icon size to resize with text zoom  */
+  --icon-height-root: 22;
+  --icon-width-root: 22;
+
+  --icon-height: var(--icon-height-root);
+  --icon-width: var(--icon-width-root);
+
+  /* Atmosphere colors - Main color group */
+  --color-atmo1: #FBFCFC;
+  --color-atmo2: #F0F0F0;
+  --color-atmo3: #E8E8E8;
+  --color-atmo4: #CCCED0;
+  --color-atmo5: #999999;
+
+  /* Accent colors - Core aspects of the interface as actions, buttons, ... */
+  --color-acce1: #414141;
+  --color-acce2: #2064b4;
+  --color-acce2h: #477DBD;
+  --color-acce3: #CC0000;
+
+  /* Status & system feedback colors */
+  --color-sema1: #59941B;
+  --color-sema3: #DB6B22;
+  --color-sema4: #C62828;
+}
+
+/* region Pentaho Widget buttons */
+.pentaho-clear-button, .pentaho-error-button, .pentaho-search-button {
+  /* Design system extra-small and small size
+     icon actual size is 12px and 16px respectively,
+     but both sizes need a container with 32px
+  */
+  --icon-height: 32;
+  --icon-width: 32;
+
+  height: calc(1px * var(--icon-height));
+  width: calc(1px * var(--icon-width));
+
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.pentaho-clear-button {
+  background-image: url("./images/close.XS.svg");
+}
+
+.pentaho-error-button {
+  background-image: url("./images/fail.red.S.svg");
+}
+
+.pentaho-search-button {
+  background-image: url("./images/search.S.svg");
+}
+/* region Pentaho Widget buttons */
+
 /* killing some intermediate styles for tabs that aren't desired */
 .gwt-TabBarFirst-wrapper{
   display: none;
@@ -519,24 +581,28 @@ body{
   font-size:0px;
 }
 
-.custom-list{
- padding: 0px;
-  margin: 0px;
+.custom-list, .custom-list-disabled {
+  padding: 0;
+  margin: 0;
+}
+
+.custom-list {
   border: 1px solid #333;
   background-color: white;
 }
-
-
-.custom-list-disabled{
- padding: 0px;
-  margin: 0px;
+.custom-list-disabled {
   border: 1px solid gray;
   background-color: #ddd;
 }
 
-.custom-list-textbox{
+.custom-list-textbox {
   border: none !important;
-  overflow:hidden;
+  overflow: hidden;
+}
+
+.custom-list .placeholder-label {
+  padding: 0 10px;
+  color: var(--color-atmo5);
 }
 
 .drop-popup{
@@ -931,7 +997,8 @@ input[type=password]:focus {
    width: 18px;
 }
 
-div.schedule-name-preview {
+/* region schedule dialogs */
+.schedule-name-preview {
   text-align: center;
   margin-bottom: 9px;
   font-style: italic;
@@ -939,7 +1006,6 @@ div.schedule-name-preview {
 
 .schedule-timestamp-listbox {
   margin-left: 10px;
-  margin-bottom: 15px;
   width: 250px;
 }
 
@@ -952,17 +1018,59 @@ div.schedule-name-preview {
   color: #999999;
 }
 
-#schedule-name-input, #schedule-owner-input {
-  margin-bottom: 15px;
+.schedule-label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  color: #666666;
+}
+.schedule-label:where(.schedule-name) {
+  margin-top: 0;
+}
+.schedule-label:where(.schedule-name-info) {
+  margin-left: 5px;
+  margin-top: 1px;
 }
 
-#generated-content-location {
-  margin-bottom: 15px;
+.schedule-input, .schedule-button, .schedule-custom-list {
+  box-sizing: border-box;
+  height: 35px;
 }
 
-.validation-textbox-image-panel {
+.schedule-input, .schedule-custom-list {
+  --element-width: 360px;
 
+  width: var(--element-width);
 }
+
+.gwt-Label.schedule-error {
+  padding: 6px 0;
+
+  color: var(--color-sema4);
+}
+
+.schedule-custom-list {
+  padding: 5px 0;
+}
+:where(.schedule-custom-list) .custom-list-drop-grid {
+  width: var(--element-width) !important;
+}
+
+button.pentaho-button:is(
+  .schedule-button,
+  .schedule-button:hover
+) {
+  margin-left: 10px;
+}
+
+:where(.new-schedule-dialog) .gwt-CheckBox {
+  display: block;
+  margin-top: 5px;
+}
+
+:where(.new-schedule-dialog) .schedule-error {
+  padding: 6px 0;
+}
+/* endregion schedule dialogs */
 
 .validation-textbox-image-panel-valid {
    background-image:url(images/valid.png);
@@ -1087,3 +1195,36 @@ div.schedule-name-preview {
   white-space: normal;
   width: 262px;
 }
+
+/* region Search Text Box */
+.gwt-search-text-box {
+  --icon-right-pos: 0;
+  --input-icon-padding: calc(1px * var(--icon-width) + var(--icon-right-pos) );
+
+  --element-width: 100%;
+
+  position: relative;
+  border-bottom: 1px solid #CCC;
+
+  width: var(--element-width);
+  font-size: var(--typ-body-font-size);
+}
+
+.gwt-search-text-box .gwt-TextBox {
+  width: var(--element-width);
+
+  text-overflow: ellipsis;
+  padding-right: var(--input-icon-padding);
+}
+
+:where(.gwt-search-text-box) .gwt-TextBox::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.gwt-search-text-box .gwt-Image {
+  position: absolute;
+  right: var(--icon-right-pos);
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* endregion Search Text Box */

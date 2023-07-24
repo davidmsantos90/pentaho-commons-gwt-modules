@@ -39,6 +39,8 @@
 }
 
 :root {
+  --element-width: auto;
+
   /* FOCUS RING */
   --focus-ring-width: 3px;
   --focus-ring: var(--focus-ring-width) solid #0075ff;
@@ -112,19 +114,6 @@
 
   --icon-height: var(--icon-height-root);
   --icon-width: var(--icon-width-root);
-
-  /* Atmosphere colors - Main color group */
-  --color-atmo1: #FBFCFC;
-  --color-atmo2: #F0F0F0;
-  --color-atmo3: #E8E8E8;
-  --color-atmo4: #CCCED0;
-  --color-atmo5: #999999;
-
-  /* Accent colors - Core aspects of the interface as actions, buttons, ... */
-  --color-acce1: #414141;
-  --color-acce2: #2064b4;
-  --color-acce2h: #477DBD;
-  --color-acce3: #CC0000;
 }
 
 @media (max-height: 720px) {
@@ -379,12 +368,7 @@ select option:hover {
 }
 
 .gwt-Label {
-  color: var(--color-acce1);
-}
-
-:where(.gwt-Label).placeholder-label {
-  padding: 0 10px;
-  color: var(--color-atmo5);
+  color: #414141;
 }
 
 .adminField {
@@ -738,17 +722,11 @@ table#weekly-recur tbody tr td:not(:first-child) span.day-of-week-checkbox input
   margin-left: 15px;
 }
 
-div.schedule-name, div.schedule-owner {
-  margin: 0 4px 5px 0;
-}
-
-div.schedule-name-info {
-  margin-top: 1px;
-  font-size: 14px;
-  color: #666666;
-  flex-wrap: wrap;
-  flex: auto;
+.schedule-name-info {
   display: flex;
+  flex: auto;
+
+  font-size: var(--typ-body-font-size);
 }
 
 div.cron-label {
@@ -1717,20 +1695,11 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
 /* region Schedule Wizard Dialogs */
 
 .schedule-label {
-  margin-top: unset;
-  margin-bottom: unset;
-  color: #666666;
-}
-
-:is(#schedule-name-input, #schedule-owner-input) {
-  margin-bottom: unset;
-}
-#schedule-name-input {
-  width: unset;
-  flex: 4 1 0;
+  margin: 0;
 }
 
 .schedule-timestamp-listbox {
+  flex: none;
   margin-left: unset;
   margin-bottom: unset;
   min-width: 200px;
@@ -1746,12 +1715,6 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
   margin-top: unset;
 }
 
-.schedule-dialog-button-panel {
-  padding-right: 3px;
-  padding-bottom: 2px;
-  width: 100%;
-}
-
 .schedule-output-location-dialog,
 .change-schedule-owner-dialog,
 .new-schedule-dialog,
@@ -1761,11 +1724,23 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
   --dialog-max-height: 450px;
 }
 
-button:is(
-  .schedule-dialog-button,
-  .schedule-dialog-button:hover
+.schedule-input, .schedule-custom-list {
+  --element-width: auto;
+}
+.schedule-input {
+  flex: auto;
+}
+
+.schedule-error {
+  flex: auto;
+  align-self: center;
+}
+
+button.pentaho-button:is(
+  .schedule-button,
+  .schedule-button:hover
 ) {
-  flex: 0 1 auto;
+  flex: none;
 
   font-size: var(--typ-body-font-size);
   line-height: var(--typ-body-line-height);
@@ -1782,7 +1757,23 @@ button:is(
   text-overflow: ellipsis;
 }
 
+/* region New Schedule Dialog */
+:where(.new-schedule-dialog) .dialog-content > * {
+  --flex-items: none;
+  row-gap: 10px;
+}
+:where(.new-schedule-dialog) .gwt-CheckBox {
+  /*display: block;*/
+  margin-top: 0;
+}
+/* endregion New Schedule Dialog */
+
 /* region Change Scheduler Owner Dialog */
+:where(.change-schedule-owner-dialog) .dialog-content > * {
+  --flex-items: none;
+  row-gap: 30px;
+}
+
 :where(.change-schedule-owner-dialog) .custom-list:not(.list-mode) {
   min-height: var(--input-outer-height);
   height: auto;
@@ -1790,23 +1781,11 @@ button:is(
   padding-top: var(--input-padding-v);
   padding-bottom: var(--input-padding-v);
 }
-
-:where(.change-schedule-owner-dialog) .change-schedule-owner-content {
-  --flex-items: none;
-  row-gap: 40px;
-}
-
 /* endregion Change Scheduler Owner Dialog */
 
 /* Output Location Dialog / Panel */
 .schedule-dialog-location-panel {
   flex-wrap: wrap;
-}
-
-#generated-content-location {
-  flex: auto;
-  margin-bottom: unset;
-  border-radius: 4px;
 }
 
 /* NOTE: --flex-items is not working for contained Flex Panels */
@@ -5493,7 +5472,6 @@ td.tab-spacer-wrapper {
   border-top: 1px solid #848484;
 }
 
-.schedule-owner-error,
 .gwt-ScrollTable .pagingOptions .errorLabel {
   color: #CC0000;
 }
@@ -5709,44 +5687,15 @@ td.tab-spacer-wrapper {
 }
 /* endregion*/
 
-
 /* region Search Text Box */
-.search-box {
-  --icon-height: 22;
-  --icon-width: 22;
-  --icon-right-pos: 10px;
-
-  position: relative;
-  padding: var(--focus-ring-padding);
-  border-bottom: 1px solid #CCC;
-}
-
-.search-box .search-box-input {
-  text-overflow: ellipsis;
-  padding-right: calc(
+.gwt-search-text-box {
+  --icon-right-pos: var(--focus-ring-padding);
+  --input-icon-padding: calc(
     var(--icon-right-pos) +
     ( 1em * var(--icon-width) / var(--typ-body-font-size-px) )
   );
-}
 
-:where(.search-box) .search-box-input::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-}
-
-:where(.search-box) .search-box-icon {
-  position: absolute;
-  right: var(--icon-right-pos);
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-:where(.search-box) .pentaho-search {
-  background-image: url("./images/search.svg");
-}
-
-:where(.search-box) .pentaho-deletebutton {
-  --icon-height: 16;
-  --icon-width: 16;
+  padding: var(--focus-ring-padding);
 }
 /* endregion Search Text Box */
 
@@ -8241,11 +8190,6 @@ treecontrol.tree-classic li .tree-selected {
 .tundra table.dijitValidationTextBox .dijitArrowButtonInner {
   padding-top: 0px;
   padding-bottom: 0px;
-}
-
-.schedule-dialog-button-panel tr td button.pentaho-button {
-  margin-left: 2px;
-  margin-right: 2px;
 }
 
 .bootstrap DIV select {
