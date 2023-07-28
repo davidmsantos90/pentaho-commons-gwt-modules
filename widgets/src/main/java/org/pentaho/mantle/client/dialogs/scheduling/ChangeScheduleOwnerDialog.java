@@ -23,6 +23,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -44,6 +45,7 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
   private static final String DIALOG_TITLE = Messages.getString( "schedule.changeOwner" );
   private static final String DIALOG_OK = Messages.getString( "ok" );
   private static final String DIALOG_CANCEL = Messages.getString( "cancel" );
+  static final int MAX_DROP_VISIBLE = 5;
 
   private final TextBox ownerInput = new TextBox();
   private final CustomListBox newOwnerList = new CustomListBox();
@@ -58,48 +60,32 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
     createUI();
   }
 
-  public void setOwner( String owner ) {
-    this.ownerInput.setText( owner );
+  public TextBox getOwnerInput() {
+    return this.ownerInput;
   }
 
   public String getOwner() {
-    String newOwner = this.newOwnerList.getValue();
-    if ( !StringUtils.isEmpty( newOwner) ) {
-      return newOwner;
-    }
+    return getOwnerInput().getText();
+  }
 
-    return this.ownerInput.getText();
+  public void setOwner( String owner ) {
+    getOwnerInput().setText( owner );
+  }
+
+  public CustomListBox getNewOwnerList() {
+    return this.newOwnerList;
+  }
+
+  public String getNewOwner() {
+    return getNewOwnerList().getValue();
   }
 
   private void createUI() {
     VerticalPanel content = new VerticalFlexPanel();
-    content.addStyleName( "change-schedule-owner-content" );
 
-    VerticalPanel currentOwnerPanel = new VerticalFlexPanel();
-    content.add( currentOwnerPanel );
-
-    Label ownerLabel = new Label( Messages.getString( "schedule.currentOwner" ) );
-    ownerLabel.addStyleName( ScheduleEditor.SCHEDULE_LABEL );
-    currentOwnerPanel.add( ownerLabel );
-
-    ownerInput.addStyleName( "schedule-dialog-input" );
-    ownerInput.setEnabled( false );
-    currentOwnerPanel.add( ownerInput );
-
-    VerticalPanel newOwnerPanel = new VerticalFlexPanel();
-    content.add( newOwnerPanel );
-
-    Label newOwnerLabel = new Label( Messages.getString( "schedule.newOwner" ) );
-    newOwnerLabel.addStyleName( ScheduleEditor.SCHEDULE_LABEL );
-    newOwnerPanel.add( newOwnerLabel );
-
-    newOwnerList.addStyleName( "schedule-dialog-custom-list" );
-    newOwnerList.setMaxDropVisible( 5 );
-    newOwnerList.setDefaultSelectionEnabled( false );
-    newOwnerList.setSelectedItemPlaceholder( Messages.getString( "schedule.selectUsername" ) );
-    newOwnerList.addChangeListener( event -> updateButtonState() );
+    content.add( createOwnerUI() );
+    content.add( createNewOwnerUI() );
     updateNewOwnersList();
-    newOwnerPanel.add( newOwnerList );
 
     setContent( content );
     content.getElement().getStyle().clearHeight();
@@ -108,6 +94,41 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
 
     setSize( "650px", "450px" );
     addStyleName( "change-schedule-owner-dialog" );
+  }
+
+  /* Visible for testing */
+  VerticalPanel createOwnerUI() {
+    VerticalPanel panel = new VerticalFlexPanel();
+
+    Label label = new Label( Messages.getString( "schedule.currentOwner" ) );
+    label.setStyleName( ScheduleEditor.SCHEDULE_LABEL );
+    panel.add( label );
+
+    TextBox input = getOwnerInput();
+    input.addStyleName( ScheduleEditor.SCHEDULE_INPUT );
+    input.setEnabled( false );
+    panel.add( input );
+
+    return panel;
+  }
+
+  /* Visible for testing */
+  VerticalPanel createNewOwnerUI() {
+    VerticalPanel panel = new VerticalFlexPanel();
+
+    Label newOwnerLabel = new Label( Messages.getString( "schedule.newOwner" ) );
+    newOwnerLabel.setStyleName( ScheduleEditor.SCHEDULE_LABEL );
+    panel.add( newOwnerLabel );
+
+    CustomListBox list = getNewOwnerList();
+    list.addStyleName( "schedule-custom-list" );
+    list.setMaxDropVisible( MAX_DROP_VISIBLE );
+    list.setDefaultSelectionEnabled( false );
+    list.setSelectedItemPlaceholderText( Messages.getString( "schedule.selectUsername" ) );
+    list.addChangeListener( event -> updateButtonState() );
+    panel.add( list );
+
+    return panel;
   }
 
   private void updateNewOwnersList() {
@@ -119,10 +140,12 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
         @Override
         public void onResponseReceived( final Request request, final Response response ) {
           if ( response.getStatusCode() == 200 ) {
-            List<String> items = parseUsersXml( response );
-            items.forEach( newOwnerList::addItem );
+            CustomListBox list = getNewOwnerList();
 
-            newOwnerList.setSearchable( items.size() > newOwnerList.getMaxDropVisible() );
+            List<String> items = parseUsersXml( response );
+            items.forEach( list::addItem );
+
+            list.setSearchable( items.size() > list.getMaxDropVisible() );
           }
 
           updateButtonState();
@@ -152,8 +175,16 @@ public class ChangeScheduleOwnerDialog extends PromptDialogBox {
     return users;
   }
 
-  private void updateButtonState() {
-    okButton.setEnabled( !getOwner().equals( ownerInput.getText() ) );
+  /* Visible for testing */
+  Button getOkButton() {
+    return this.okButton;
   }
 
+  /* Visible for testing */
+  void updateButtonState() {
+    String newOwner = getNewOwner();
+
+    boolean hasNewOwner = !StringUtils.isEmpty( newOwner );
+    getOkButton().setEnabled( hasNewOwner && !getOwner().equals( newOwner ) );
+  }
 }

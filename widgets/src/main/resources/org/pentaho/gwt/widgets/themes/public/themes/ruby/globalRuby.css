@@ -12,7 +12,7 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 * See the GNU Lesser General Public License for more details.
 *
-* Copyright 2017-2023 Hitachi Vantara.  All rights reserved.
+* Copyright 2017-2023 Hitachi Vantara. All rights reserved.
 */
 @font-face {
   font-family: 'OpenSansRegular';
@@ -857,12 +857,6 @@ div#FilterPanel .pentaho-toggle-button-horizontal {
   border-radius: 4px;
 }
 
-.IE .pentaho-toggle-button-single {
-
-  /*background: url('images/bg_btn.png') repeat-x;
-  background-position: center center;*/
-}
-
 .pentaho-toggle-button-horizontal-first {
   border-radius: 4px 0px 0px 4px;
 }
@@ -882,18 +876,6 @@ div#FilterPanel .pentaho-toggle-button-horizontal {
 
 .pentaho-toggle-button-vertical-last {
   border-radius: 0px 0px 4px 4px;
-}
-
-/* Standard toggle button style. Should be applied to a <button> element to get full pseudo-styles. */
-.pentaho-toggle-button-up,
-.pentaho-toggle-button-up-disabled {
-}
-
-.IE .pentaho-toggle-button-up,
-.IE .pentaho-toggle-button-up-disabled {
-
-  /* background: url('images/bg_btn.png') repeat-x;
-   background-position: center center;*/
 }
 
 /* Applies the green glow to buttons */
@@ -928,20 +910,6 @@ div#FilterPanel .pentaho-toggle-button-horizontal {
 .pentaho-toggle-button-down-disabled + .pentaho-toggle-button-up:hover,
 .pentaho-toggle-button-down-hovering + .pentaho-toggle-button-up:hover {
   border-left: 1px solid white;
-}
-
-.IE .pentaho-toggle-button-down,
-.IE .pentaho-toggle-button-down-disabled {
-
-  /* background: url('images/bg_btn_selected.png') repeat-x;
-   background-position: center center;*/
-}
-
-.IE .pentaho-toggle-button-down-hovering {
-
-  /*border: 0px solid #73FF02;
-  background: url('images/bg_btn_selected.png') repeat-x;
-  background-position: center center;*/
 }
 
 div#FilterPanel div.pentaho-toggle-button-down button {
@@ -1208,48 +1176,6 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
   width: 100%;
 }
 
-.IE .pentaho-dialog {
-
-  /*border: 1px solid #000000;
-  background: url('../images/wt_transparent.png') repeat;*/
-}
-
-.IE9 #browse-properties-dialog.new-schedule-dialog {
-  height: 500px !important;
-}
-
-.IE9 .schedule-recurrence-dialog {
-  height: 500px !important;
-}
-
-.IE9 .schedule-params-dialog {
-  height: 500px !important;
-}
-
-.IE10 #browse-properties-dialog.new-schedule-dialog {
-  height: 500px !important;
-}
-
-.IE10 .schedule-recurrence-dialog {
-  height: 500px !important;
-}
-
-.IE10 .schedule-params-dialog {
-  height: 500px !important;
-}
-
-.IE .schedule-recurrence-dialog {
-  height: 500px !important;
-}
-
-.IE .schedule-params-dialog {
-  height: 500px !important;
-}
-
-.IE .schedule-email-dialog {
-  height: 500px !important;
-}
-
 .pentaho-dialog .Caption {
   background: none;
   font-size: 24px;
@@ -1271,11 +1197,6 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
 
 .pentaho-dialog .button-panel.center {
   text-align: center;
-}
-
-.IE .pentaho-dialog .Caption {
-
-  /*background: url('images/bg_title.png') repeat-x;*/
 }
 
 .pentaho-dialog .button-panel {
@@ -1865,11 +1786,6 @@ button.pentaho-button:is(
   outline-offset: 5px;
 }
 
-.IE .pentaho-tabWidget {
-
-  /* background: url('images/tab_off.png') repeat-x;*/
-}
-
 .pentaho-tabWidget .pentaho-closebutton {
   position: relative;
   top: 3px;
@@ -1919,11 +1835,6 @@ button.pentaho-button:is(
 #contentArea .pentaho-tabWidget-selected,
 #editContainer .pentaho-tabWidget-selected {
   border-top: solid 4px #CC0000;
-}
-
-.IE .pentaho-tabWidget-selected {
-
-  /*background: url('images/tab_on.png') repeat-x;*/
 }
 
 .pentaho-tabWidget-selected .pentaho-tabWidgetLabel {
@@ -2455,16 +2366,6 @@ table.toolbar {
   margin: 0px;
 }
 
-.pentaho-titled-toolbar {
-
-  /* background-color: #F8F8F8;*/
-}
-
-.IE .pentaho-titled-toolbar {
-
-  /*background: url('images/bg_title.png') repeat-x;*/
-}
-
 .pentaho-titled-toolbar .pentaho-titled-toolbar-label {
   color: #333;
   font-size: 13px;
@@ -2475,11 +2376,6 @@ table.toolbar {
   background: #F8F8F8;
 }
 
-.IE .pentaho-bottom-bar {
-
-  /* background: url('images/bg_bottom_bar.png') repeat-x 0px -4px; */
-}
-
 .pentaho-transparent {
   background-color: transparent;
 }
@@ -2488,16 +2384,8 @@ table.toolbar {
   background: #F8F8F8; /* Old browsers */
 }
 
-.IE .pentaho-gradient {
-}
-
 .pentaho-rounded-panel {
   padding: 4px 4px 4px 4px;
-}
-
-.IE .pentaho-rounded-panel {
-
-  /*background: url('../images/wt_transparent.png') repeat;*/
 }
 
 /* BEGIN IE FIXES Admin View
@@ -2564,23 +2452,8 @@ body.IE>table {
   background-color: transparent;
 }
 
-.IE .pentaho-shine {
-
-  /* background: url('../images/shine_bg.png') repeat;*/
-}
-
-.pentaho-background {
-
-  /* background-color: rgba(255, 255, 255, 0.2); */
-}
-
 .pentaho-toolbar-background {
   background-color: rgba(255, 255, 255, 0.2);
-}
-
-.IE .pentaho-background {
-
-  /*background: url('../images/wt_transparent.png') repeat;*/
 }
 
 .pentaho-padding-sm {
@@ -2597,106 +2470,6 @@ body.IE>table {
   -webkit-box-shadow: 0px 3px 5px rgba(50, 50, 50, 0.2);
   -moz-box-shadow: 0px 3px 5px rgba(50, 50, 50, 0.2);
   box-shadow: 0px 3px 5px rgba(50, 50, 50, 0.2);
-}
-
-.IE .pentaho-tooltip-background {
-
-  /*background: url('../images/wt_transparent.png') repeat;*/
-}
-
-.pentaho-tooltip-contents {
-
-  /*padding: 4px;
-  border: 1px solid #abc9d9;
-   background-color: #eff2f4; */
-}
-
-.pentaho-shadow {
-
-  /*
-   -webkit-box-shadow: 0px 3px 5px rgba(50, 50, 50, 0.3);
-   -moz-box-shadow:    0px 3px 5px rgba(50, 50, 50, 0.3);
-   box-shadow:         0px 3px 5px rgba(50, 50, 50, 0.3);*/
-}
-
-.pentaho-shadow-inset-glow {
-
-  /*  -moz-box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;
-  -webkit-box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;
-  box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;*/
-}
-
-.pentaho-shadow-no-offset {
-
-  /*  -moz-box-shadow: 1px 1px 5px 0px #333333;
-  -webkit-box-shadow: 1px 1px 5px 0px #333333;
-  box-shadow: 1px 1px 5px 0px #333333;*/
-}
-
-.pentaho-rounded-panel2 {
-
-  /*border: 1px solid black;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-
-  -moz-box-shadow: 0 0 1px 1px rgba(255, 255, 255, .6) inset;
-  -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, .6) inset;
-  box-shadow: 0 0 1px 1px rgba(255, 255, 255, .6) inset;  */
-}
-
-.pentaho-rounded-panel2-shadowed {
-
-  /*  border: 1px solid black;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-
-  -moz-box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;
-  -webkit-box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;
-  box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;*/
-}
-
-.pentaho-rounded-panel-bottom-lr {
-
-  /*  -moz-border-radius: 0px 0px 7px 7px;
-  -webkit-border-radius: 0px 0px 7px 7px;
-  border-radius: 0px 0px 7px 7px;*/
-}
-
-.pentaho-shadow-right-side {
-
-  /*  -moz-box-shadow: 2px 2px 4px 0 #333333;
-  -webkit-box-shadow: 2px 2px 4px 0 #333333;
-  box-shadow: 2px 2px 4px 0 #333333;*/
-}
-
-.pentaho-rounded-panel-right {
-
-  /*  border-top: 1px solid rgba(255, 255, 255, 0.59375);
-  border-right: 1px solid rgba(255, 255, 255, 0.59375);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.59375);
-  -moz-border-radius: 0px 5px 5px 0px;
-  -webkit-border-radius: 0px 5px 5px 0px;
-  border-radius: 0px 5px 5px 0px;*/
-}
-
-.pentaho-rounded-panel-top-right {
-
-  /*  border-top: 1px solid rgba(255, 255, 255, 0.59375);
-  border-right: 1px solid rgba(255, 255, 255, 0.59375);
-  -moz-border-radius: 0px 5px 0px 0px;
-  -webkit-border-radius: 0px 5px 0px 0px;
-  border-radius: 0px 5px 0px 0px;*/
-}
-
-.pentaho-rounded-panel-top-left {
-
-  /*  border-top: 1px solid black;
-  border-left: 1px solid black;
-  -moz-border-radius: 5px 0px 0px 0px;
-  -webkit-border-radius: 5px 0px 0px 0px;
-  border-radius: 5px 0px 0px 0px;*/
 }
 
 .pentaho-disclosure-panel {
@@ -2764,11 +2537,6 @@ body.IE>table {
   border: none;  /*background: url("images/bg_btn.png")*/
 }
 
-.contrast-color {
-
-  /* color: white; */
-}
-
 .contrast-background {
 }
 
@@ -2799,20 +2567,10 @@ body.IE>table {
   box-shadow: 1px 1px 5px 0px #333333, 0 0 1px 1px rgba(255, 255, 255, .6) inset;
 }
 
-.IE .pentaho-launcher-panel-shadowed {
-
-  /* background: url('../images/wt_transparent.png') repeat;*/
-}
-
 .pentaho-launcher-shine {
   background-color: transparent;
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.35)), to(rgba(255, 255, 255, 0.15)));
   background: -moz-linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.15) 100%) repeat scroll 0 0 transparent;
-}
-
-.IE .pentaho-launcher-shine {
-
-  /*background: url('../images/container_bg.png') repeat;*/
 }
 
 /* ======================= Login Styles ========================= */

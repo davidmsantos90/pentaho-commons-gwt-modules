@@ -32,12 +32,13 @@ import java.util.List;
 @SuppressWarnings( "deprecation" )
 public class SearchTextBox extends HorizontalFlexPanel implements ChangeListener {
 
+  public static final String CLASSNAME = "gwt-search-text-box";
   static final String SEARCH_ICON_CLASSNAME = "pentaho-search-button";
   static final String CLEAR_ICON_CLASSNAME = "pentaho-clear-button";
 
   private final List<ChangeListener> changeListeners = new ArrayList<>();
   private final TextBox input = new TextBox();
-  private final Image icon = ImageUtil.getThemeableImage( "search-box-icon", "icon-zoomable" );
+  private final Image icon = ImageUtil.getThemeableImage( "icon-zoomable" );
 
   public SearchTextBox() {
     super();
@@ -45,8 +46,7 @@ public class SearchTextBox extends HorizontalFlexPanel implements ChangeListener
     createUI();
   }
 
-  /* Visible for testing */
-  TextBox getInput() {
+  public TextBox getInput() {
     return this.input;
   }
 
@@ -58,13 +58,11 @@ public class SearchTextBox extends HorizontalFlexPanel implements ChangeListener
     getInput().setText( value );
   }
 
-  /* Visible for testing */
-  Image getIcon() {
+  public Image getIcon() {
     return this.icon;
   }
 
-  /* Visible for testing */
-  List<ChangeListener> getChangeListeners() {
+  public List<ChangeListener> getChangeListeners() {
     return this.changeListeners;
   }
 
@@ -72,9 +70,10 @@ public class SearchTextBox extends HorizontalFlexPanel implements ChangeListener
     add( createInputUI() );
     add( createIconUI() );
 
-    addStyleName( "gwt-search-text-box" );
+    addStyleName( CLASSNAME );
   }
 
+  /* Visible for testing */
   TextBox createInputUI() {
     TextBox searchInput = getInput();
 
@@ -99,16 +98,20 @@ public class SearchTextBox extends HorizontalFlexPanel implements ChangeListener
     return searchInput;
   }
 
+  /* Visible for testing */
   Image createIconUI() {
     Image searchIcon = getIcon();
     searchIcon.addStyleName( SEARCH_ICON_CLASSNAME );
-    searchIcon.addClickHandler( event -> {
-      if ( searchIcon.getStyleName().contains( CLEAR_ICON_CLASSNAME ) ) {
-        clearText();
-      }
-    } );
+    searchIcon.addClickHandler( event -> onIconClick() );
 
     return searchIcon;
+  }
+
+  /* Visible for testing */
+  void onIconClick() {
+    if ( getIcon().getStyleName().contains( CLEAR_ICON_CLASSNAME ) ) {
+      clearText();
+    }
   }
 
   public void clearText() {
@@ -118,7 +121,6 @@ public class SearchTextBox extends HorizontalFlexPanel implements ChangeListener
     Image searchIcon = getIcon();
     searchIcon.addStyleName( SEARCH_ICON_CLASSNAME );
     searchIcon.removeStyleName( CLEAR_ICON_CLASSNAME );
-
 
     onChange( this );
   }

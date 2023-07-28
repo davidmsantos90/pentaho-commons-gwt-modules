@@ -155,9 +155,9 @@ public class ScheduleParamsDialog extends AbstractWizardDialog {
     scheduleParams = getScheduleParams( false );
 
     if ( editJob != null ) {
-      scheduleParams.set( scheduleParams.size(), ScheduleParamsHelper.generateActionUser( editJob ) );
+      scheduleParams.set( scheduleParams.size(), generateActionUser() );
 
-      scheduleParams.set( scheduleParams.size(), ScheduleParamsHelper.generateLineageId( editJob ) );
+      scheduleParams.set( scheduleParams.size(), generateLineageId() );
     }
 
     if ( isEmailConfValid ) {
@@ -172,7 +172,7 @@ public class ScheduleParamsDialog extends AbstractWizardDialog {
         jobSchedule.put( ScheduleParamsHelper.OVERWRITE_FILE_KEY, null );
       }
 
-      JSONObject scheduleRequest = (JSONObject) JSONParser.parseStrict( jobSchedule.toString() );
+      JSONObject scheduleRequest = parseStrictScheduleJob();
       scheduleRequest.put( ScheduleParamsHelper.JOB_PARAMETERS_KEY, scheduleParams );
 
       RequestBuilder scheduleFileRequestBuilder = ScheduleHelper.buildRequestForJob( editJob, scheduleRequest );
@@ -224,6 +224,21 @@ public class ScheduleParamsDialog extends AbstractWizardDialog {
       setDone( true );
     }
     return false;
+  }
+
+  /* Visible for testing */
+  JSONObject parseStrictScheduleJob() {
+    return (JSONObject) JSONParser.parseStrict( jobSchedule.toString() );
+  }
+
+  /* Visible for testing */
+  JSONObject generateActionUser() {
+    return ScheduleParamsHelper.generateActionUser( editJob );
+  }
+
+  /* Visible for testing */
+  JSONObject generateLineageId() {
+    return ScheduleParamsHelper.generateLineageId( editJob );
   }
 
   private void showScheduleEmailDialog( final JSONArray scheduleParams ) {

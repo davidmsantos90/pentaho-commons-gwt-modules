@@ -105,6 +105,10 @@ public class ScheduleRecurrenceDialog extends AbstractWizardDialog {
     super( type, Messages.getString( type != ScheduleDialogType.BLOCKOUT ? "editSchedule" : "editBlockoutSchedule" ),
       null, false, true );
 
+    setResponsive( true );
+    setSizingMode( DialogSizingMode.FILL_VIEWPORT );
+    setWidthCategory( DialogWidthCategory.SMALL );
+
     isBlockoutDialog = type == ScheduleDialogType.BLOCKOUT;
     setCallback( callback );
     editJob = jsJob;
@@ -125,6 +129,10 @@ public class ScheduleRecurrenceDialog extends AbstractWizardDialog {
                                    IDialogCallback callback, boolean hasParams, boolean isEmailConfValid ) {
     super( ScheduleDialogType.SCHEDULER, Messages.getString( "newSchedule" ), null, false, true );
 
+    setResponsive( true );
+    setSizingMode( DialogSizingMode.FILL_VIEWPORT );
+    setWidthCategory( DialogWidthCategory.SMALL );
+
     isBlockoutDialog = false;
     setCallback( callback );
     this.parentDialog = parentDialog;
@@ -138,6 +146,11 @@ public class ScheduleRecurrenceDialog extends AbstractWizardDialog {
       String filePath, String outputLocation, String scheduleName, IDialogCallback callback, boolean hasParams,
       boolean isEmailConfValid ) {
     super( type, title, null, false, true );
+
+    setResponsive( true );
+    setSizingMode( DialogSizingMode.FILL_VIEWPORT );
+    setWidthCategory( DialogWidthCategory.SMALL );
+
     isBlockoutDialog = ( type == ScheduleDialogType.BLOCKOUT );
     setCallback( callback );
     this.parentDialog = parentDialog;

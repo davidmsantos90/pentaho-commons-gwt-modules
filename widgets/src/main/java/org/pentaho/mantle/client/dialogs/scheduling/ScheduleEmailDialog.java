@@ -92,7 +92,7 @@ public class ScheduleEmailDialog extends AbstractWizardDialog {
    */
   @Override
   protected boolean onFinish() {
-    final JSONObject scheduleRequest = (JSONObject) JSONParser.parseStrict( jobSchedule.toString() );
+    final JSONObject scheduleRequest = parseStrictScheduleJob();
     JsArray<JsSchedulingParameter> emailParams = scheduleEmailWizardPanel.getEmailParams();
 
     if ( scheduleParams == null ) {
@@ -107,9 +107,9 @@ public class ScheduleEmailDialog extends AbstractWizardDialog {
     }
 
     if ( editJob != null ) {
-      scheduleParams.set( scheduleParams.size(), ScheduleParamsHelper.generateActionUser( editJob ) );
+      scheduleParams.set( scheduleParams.size(), generateActionUser() );
 
-      scheduleParams.set( scheduleParams.size(), ScheduleParamsHelper.generateLineageId( editJob ) );
+      scheduleParams.set( scheduleParams.size(), generateLineageId() );
     }
 
     scheduleRequest.put( ScheduleParamsHelper.JOB_PARAMETERS_KEY, scheduleParams );
@@ -153,6 +153,21 @@ public class ScheduleEmailDialog extends AbstractWizardDialog {
     }
     setDone( true );
     return true;
+  }
+
+  /* Visible for testing */
+  JSONObject parseStrictScheduleJob() {
+    return (JSONObject) JSONParser.parseStrict( jobSchedule.toString() );
+  }
+
+  /* Visible for testing */
+  JSONObject generateActionUser() {
+    return ScheduleParamsHelper.generateActionUser( editJob );
+  }
+
+  /* Visible for testing */
+  JSONObject generateLineageId() {
+    return ScheduleParamsHelper.generateLineageId( editJob );
   }
 
   public Boolean getDone() {

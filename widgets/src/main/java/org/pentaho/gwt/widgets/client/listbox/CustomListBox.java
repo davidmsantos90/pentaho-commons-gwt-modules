@@ -283,7 +283,7 @@ public class CustomListBox extends HorizontalFlexPanel implements ChangeListener
     item.setListItemListener( this );
 
     // If first one added, set selectedIndex to 0
-    if ( defaultSelectionEnabled && items.size() == 1 && this.visible == 1  ) {
+    if ( isDefaultSelectionEnabled() && items.size() == 1 && this.visible == 1 ) {
       setSelectedIndex( 0 );
     }
 
@@ -333,7 +333,7 @@ public class CustomListBox extends HorizontalFlexPanel implements ChangeListener
     item.setListItemListener( this );
 
     // If first one added, set selectedIndex to 0
-    if ( defaultSelectionEnabled && items.size() == 1 ) {
+    if ( isDefaultSelectionEnabled() && items.size() == 1 ) {
       setSelectedIndex( 0 );
     }
 
@@ -445,22 +445,30 @@ public class CustomListBox extends HorizontalFlexPanel implements ChangeListener
 
   protected TextBox editableTextBox;
   private SimplePanel selectedItemWrapper = new SimplePanel();
-  private Label selectedItemPlaceholder = new Label();
+  private final Label selectedItemPlaceholder = new Label();
+
+  public Label getSelectedItemPlaceholder() {
+    return this.selectedItemPlaceholder;
+  }
+
+  public void setSelectedItemPlaceholderText( String placeholder ) {
+    this.getSelectedItemPlaceholder().setText( placeholder );
+  }
 
   protected void updateSelectedDropWidget() {
-    Widget selectedWidget = selectedItemPlaceholder; // Default to show in case of empty sets?
+    Widget selectedWidget = getSelectedItemPlaceholder(); // Default to show in case of empty sets?
 
     if ( !editable ) { // only show their widget if editable is false
       if ( selectedIndex >= 0 ) {
         selectedWidget = items.get( selectedIndex ).getWidgetForDropdown();
-      } else if ( !items.isEmpty() && defaultSelectionEnabled ) {
+      } else if ( isDefaultSelectionEnabled() && !items.isEmpty() ) {
         selectedWidget = items.get( 0 ).getWidgetForDropdown();
       }
     } else {
       String previousVal = editableTextBox.getText();
       String newVal = getAcceptedText();
       if ( newVal == null ) {
-        if ( !items.isEmpty() && defaultSelectionEnabled ) {
+        if ( isDefaultSelectionEnabled() && !items.isEmpty() ) {
           newVal = items.get( 0 ).getValue().toString();
         } else {
           newVal = "";
@@ -696,20 +704,29 @@ public class CustomListBox extends HorizontalFlexPanel implements ChangeListener
     }
   }
 
-  private DropPopupPanel createPopupPanel() {
+  /* Visible for testing */
+  DropPopupPanel createPopupPanel() {
     DropPopupPanel panel = new DropPopupPanel();
     panel.addPopupListener( this );
 
     VerticalPanel content = new VerticalFlexPanel();
-    if ( this.searchable ) {
-      searchTextBox.addChangeListener( widget -> updateUI() );
-      content.add( searchTextBox );
+    if ( isSearchable() ) {
+      SearchTextBox search = getSearchTextBox();
+
+      search.addChangeListener( widget -> updateUI() );
+      content.add( search );
     }
 
     content.add( popupScrollPanel );
     panel.add( content );
 
     return panel;
+  }
+
+
+  /* Visible for testing */
+  SearchTextBox getSearchTextBox() {
+    return this.searchTextBox;
   }
 
   /**
@@ -873,12 +890,12 @@ public class CustomListBox extends HorizontalFlexPanel implements ChangeListener
     }
   }
 
-  public void setDefaultSelectionEnabled( boolean value ) {
-    this.defaultSelectionEnabled = value;
+  public boolean isDefaultSelectionEnabled() {
+    return this.defaultSelectionEnabled;
   }
 
-  public void setSelectedItemPlaceholder( String placeholder ) {
-    this.selectedItemPlaceholder.setText( placeholder );
+  public void setDefaultSelectionEnabled( boolean value ) {
+    this.defaultSelectionEnabled = value;
   }
 
   /**
@@ -993,7 +1010,7 @@ public class CustomListBox extends HorizontalFlexPanel implements ChangeListener
   // ======================================= Listener methods ===================================== //
 
   public void onPopupClosed( PopupPanel popupPanel, boolean b ) {
-    this.searchTextBox.clearText();
+    this.getSearchTextBox().clearText();
     this.popupShowing = false;
   }
 
