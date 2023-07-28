@@ -78,6 +78,8 @@ public class ScheduleRecurrenceDialog extends AbstractWizardDialog {
   protected String filePath;
   protected String outputLocation;
   protected String scheduleName;
+  protected String scheduleOwner;
+
   protected String appendDateFormat;
   protected boolean overwriteFile;
 
@@ -501,12 +503,20 @@ public class ScheduleRecurrenceDialog extends AbstractWizardDialog {
             startDateTime, endDate ) );
       }
     }
-    schedule.put( "inputFile", new JSONString( filePath ) ); //$NON-NLS-1$
-    schedule.put( "outputFile", new JSONString( outputLocation ) ); //$NON-NLS-1$
-
+    schedule.put( "inputFile", new JSONString( filePath ) );
+    schedule.put( "outputFile", new JSONString( outputLocation ) );
     if ( scheduleEditorWizardPanel.getTimeZone( ) != null ) {
       schedule.put( "timeZone", new JSONString( scheduleEditorWizardPanel.getTimeZone( ) ) ); //$NON-NLS-1$
     }
+
+    JSONArray jobParameters = new JSONArray();
+
+    if ( !StringUtils.isEmpty( scheduleOwner ) ) {
+      jobParameters.set( jobParameters.size(), ScheduleParamsHelper.buildScheduleParam(
+        ScheduleParamsHelper.ACTION_USER_KEY, scheduleOwner, "string" ) );
+    }
+
+    schedule.put( ScheduleParamsHelper.JOB_PARAMETERS_KEY, jobParameters );
 
     return schedule;
   }

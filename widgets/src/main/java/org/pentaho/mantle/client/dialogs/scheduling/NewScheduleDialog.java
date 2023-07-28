@@ -408,11 +408,6 @@ public class NewScheduleDialog extends PromptDialogBox {
   }
 
   private void updateChangeOwnerButton() {
-    if ( jsJob == null ) {
-      changeOwnerButton.setEnabled( false );
-      return;
-    }
-
     final String isAdminUserUrl = EnvironmentHelper.getFullyQualifiedURL() + "api/mantle/isAdministrator";
     final RequestBuilder builder = new RequestBuilder( RequestBuilder.GET, isAdminUserUrl );
 
@@ -534,9 +529,12 @@ public class NewScheduleDialog extends PromptDialogBox {
               dateFormat = timestampLB.getValue( timestampLB.getSelectedIndex() );
             }
 
+            String scheduleName = getScheduleName();
+            String scheduleOutputPath = getScheduleLocation();
+
             if ( jsJob != null ) {
-              jsJob.setJobName( getScheduleName() );
-              jsJob.setOutputPath( getScheduleLocation(), getScheduleName() );
+              jsJob.setJobName( scheduleName );
+              jsJob.setOutputPath( scheduleOutputPath, scheduleName );
 
               String scheduleOwner = scheduleOwnerTextBox.getText().trim();
               if ( !StringUtils.isEmpty( scheduleOwner ) && !scheduleOwner.equalsIgnoreCase( jsJob.getUserName() ) ) {
@@ -594,12 +592,15 @@ public class NewScheduleDialog extends PromptDialogBox {
               }
             } else if ( recurrenceDialog == null ) {
               recurrenceDialog = new ScheduleRecurrenceDialog( NewScheduleDialog.this, filePath,
-                getScheduleLocation(), getScheduleName(), dateFormat, overwriteFile, callback,
+                scheduleOutputPath, scheduleName, dateFormat, overwriteFile, callback,
                 hasParams, isEmailConfValid );
             } else {
-              recurrenceDialog.scheduleName = getScheduleName();
-              recurrenceDialog.outputLocation = getScheduleLocation();
+              recurrenceDialog.scheduleName = scheduleName;
+              recurrenceDialog.outputLocation = scheduleOutputPath;
             }
+
+            recurrenceDialog.setCallback( callback );
+            recurrenceDialog.scheduleOwner = getScheduleOwnerTextBox().getText();
 
             recurrenceDialog.setParentDialog( NewScheduleDialog.this );
             recurrenceDialog.center();

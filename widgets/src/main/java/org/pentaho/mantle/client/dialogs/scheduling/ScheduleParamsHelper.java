@@ -66,6 +66,15 @@ public class ScheduleParamsHelper {
     for ( int i = 0; i < schedulingParams.size(); i++ ) {
       params.set( i, schedulingParams.get( i ) );
     }
+    
+    JSONArray jobParams = (JSONArray) jobSchedule.get( JOB_PARAMETERS_KEY );
+    if ( jobParams != null ) {
+      int size = params.size();
+
+      for ( int i = 0; i < jobParams.size(); i++ ) {
+        params.set( size + i, jobParams.get( i ) );
+      }
+    }
 
     if ( jobSchedule.get( APPEND_DATE_FORMAT_KEY ) != null ) {
       String dateFormat = jobSchedule.get( APPEND_DATE_FORMAT_KEY ).toString();
